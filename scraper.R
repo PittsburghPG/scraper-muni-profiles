@@ -10,6 +10,7 @@ library(stringr)    # String manipulation
 library(httr)       # HTTP requests
 library(tibble)     # Modern data frames
 library(here)
+library(readr)
 
 #' Safely extract text from HTML nodes using XPath
 #' @param doc HTML document
@@ -520,4 +521,4 @@ cat("  municipal_data <- scrape_all_municipalities()\n\n")
 cat("Note: The script includes a 1-second delay between requests\n")
 cat("to avoid overwhelming the county's server.\n")
 
-write_csv(here("data", "public", "muni-profiles.csv"))
+write_csv(municipal_data, here("data", "muni-profiles.csv"))
