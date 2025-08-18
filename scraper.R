@@ -574,4 +574,4 @@ cat("to avoid overwhelming the county's server.\n")
 
 dat <- scrape_all_municipalities()
 
-# write_csv(dat, here("data", "muni-profiles.csv"))
+write_csv(dat, here("data", "muni-profiles.csv"))
