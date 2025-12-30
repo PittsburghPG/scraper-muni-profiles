@@ -6,29 +6,52 @@ R scraper to pull municipality profiles in Allegheny County, Pa.: <https://apps.
 
 This scraper collects detailed information about all 130 municipalities in Allegheny County, Pennsylvania. The data includes demographic information, property values, tax rates, political districts, emergency services, and municipal contact information.
 
-## Usage
+## Quick Start
 
-The scraper is implemented in `scraper.R` and can be run in two ways:
+This repository contains two main scrapers:
 
-### Test Run
-To test the scraper on a few municipalities:
+### 1. Scrape Municipal Profiles
+
 ```r
-test_results <- test_scraper(c(1, 2, 3))
+source("scrape-profiles.R")
 ```
 
-### Full Scrape
-To scrape all 130 municipalities (takes 2-3 minutes):
+This scraper collects detailed information about all 130 municipalities from the Allegheny County Municipal Profiles website:
+- Demographics and geographic information
+- Property values and assessment data
+- Contact information for municipal offices
+- Emergency services information
+- Political district assignments
+
+**Output:** `data/muni-profiles.csv`
+
+**Time:** ~2-3 minutes (1-second delay between requests)
+
+### 2. Scrape Historical Millage Rates
+
 ```r
-municipal_data <- scrape_all_municipalities()
+source("scrape-millage.R")
 ```
 
-The script automatically saves the output to `data/muni-profiles.csv`.
+This scraper fetches tax millage rates for all available years (currently 2018-2025) from the Allegheny County Treasurer's Office:
+- Municipal millage rates from https://apps.alleghenycounty.us/website/MillMuni.asp
+- School district millage rates from https://apps.alleghenycounty.us/website/millsd.asp
+- County millage rates
 
-**Note:** The script includes a 1-second delay between requests to avoid overwhelming the county's server.
+**Output:** Three long-format CSV files ready for joining with assessment data:
+  - `data/muni-millage-rates-long.csv` - Municipal millage rates
+  - `data/school-millage-rates-long.csv` - School district millage rates
+  - `data/county-millage-rates-long.csv` - County millage rates
+
+**Time:** ~1 minute (1-second delay between requests)
+
+**Data Preservation:** The millage scraper preserves historical data when re-run. If the Treasurer's Office removes older years from their website, those years will still be retained in your local CSV files. New data is merged with existing data using `distinct()` to avoid duplicates.
 
 ## Data Codebook
 
-The scraped data includes the following columns:
+### muni-profiles.csv
+
+The main scraped data file includes the following columns:
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
@@ -55,26 +78,47 @@ The scraped data includes the following columns:
 | certified_exempt_value | Numeric | Certified tax-exempt property value |
 | certified_purta_value | Numeric | Public Utility Realty Tax Act value |
 | certified_all_real_estate | Numeric | Total real estate value (sum of above categories) |
-| millage_2023_municipality | Numeric | Municipal tax rate for 2023 |
-| millage_2024_municipality | Numeric | Municipal tax rate for 2024 |
-| millage_2025_municipality | Numeric | Municipal tax rate for 2025 |
-| millage_2023_school | Numeric | School district tax rate for 2023 |
-| millage_2024_school | Numeric | School district tax rate for 2024 |
-| millage_2025_school | Numeric | School district tax rate for 2025 |
 
-## Data Source
+### muni-millage-rates-long.csv
 
-All data is scraped from the Allegheny County Municipal Profiles website:
-<https://apps.alleghenycounty.us/website/MuniProfile.asp>
+Long-format municipal millage rates file for joining with assessment appeals data. Each row represents a municipality-year combination.
 
-## Dependencies
+| Column Name | Type | Description |
+|-------------|------|-------------|
+| municipality | Character | Full name of the municipality |
+| muni_code | Character | Municipality code used by Allegheny County |
+| tax_year | Integer | Tax year (2018-2025) |
+| millage | Numeric | Municipal tax rate for that year (in mills) |
 
-Required R packages:
-- `rvest` - Web scraping
-- `dplyr` - Data manipulation
-- `purrr` - Functional programming tools
-- `stringr` - String manipulation
-- `httr` - HTTP requests
-- `tibble` - Modern data frames
-- `here` - Path management
-- `readr` - Reading/writing CSV files
+### school-millage-rates-long.csv
+
+Long-format school district millage rates file for joining with assessment appeals data. Each row represents a school district-year combination.
+
+| Column Name | Type | Description |
+|-------------|------|-------------|
+| school | Character | Name of the school district (uppercase, cleaned) |
+| school_code | Character | School district code |
+| tax_year | Integer | Tax year (2018-2025) |
+| millage | Numeric | School district tax rate for that year (in mills) |
+
+**Note:** The school district file uses `distinct()` to remove duplicate rows since multiple municipalities can be in the same school district.
+
+### county-millage-rates-long.csv
+
+Long-format county millage rates file for joining with assessment appeals data. Each row represents a tax year.
+
+| Column Name | Type | Description |
+|-------------|------|-------------|
+| county | Character | County name (always "Allegheny County") |
+| tax_year | Integer | Tax year (2018-2025) |
+| millage | Numeric | Allegheny County tax rate for that year (in mills) |
+
+**Note:** Tax rates are expressed in mills (1 mill = $1 per $1,000 of assessed value). County millage rates are uniform across all municipalities in Allegheny County.
+
+**Important:** Municipal and School District taxes in McDonald Borough and Trafford Borough are not based on current Allegheny County assessed property values. These municipalities use different assessment systems, so their millage rates should not be directly compared with other Allegheny County municipalities.
+
+## Data Sources
+
+- **Municipal Profiles:** <https://apps.alleghenycounty.us/website/MuniProfile.asp>
+- **Municipal Millage Rates:** <https://apps.alleghenycounty.us/website/MillMuni.asp>
+- **School District Millage Rates:** <https://apps.alleghenycounty.us/website/millsd.asp>

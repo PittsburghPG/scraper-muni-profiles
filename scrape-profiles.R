@@ -65,12 +65,6 @@ scrape_municipality <- function(muni_id) {
     certified_exempt_value = NA,        # Certified tax-exempt property value
     certified_purta_value = NA,         # Public Utility Realty Tax Act value
     certified_all_real_estate = NA,     # Total real estate value
-    millage_2023_municipality = NA,     # Municipal tax rate 2023
-    millage_2024_municipality = NA,     # Municipal tax rate 2024
-    millage_2025_municipality = NA,     # Municipal tax rate 2025
-    millage_2023_school = NA,           # School district tax rate 2023
-    millage_2024_school = NA,           # School district tax rate 2024
-    millage_2025_school = NA,           # School district tax rate 2025
     square_miles = NA                   # Geographic area
 
   )
@@ -102,36 +96,6 @@ scrape_municipality <- function(muni_id) {
 
     result$certified_all_real_estate <- as.numeric(gsub("[^0-9.]", "",
       safe_extract(page, "//*[@id='no-more-tables']/table[1]/tbody/tr[1]/td[5]", "0")))
-
-    # Extract municipality millage for all years using exact XPath
-    millage_muni_2023 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[2]/td[2]")
-    millage_muni_2024 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[2]/td[3]")
-    millage_muni_2025 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[2]/td[4]")
-
-    if (!is.na(millage_muni_2023)) {
-      result$millage_2023_municipality <- as.numeric(gsub("[^0-9.]", "", millage_muni_2023))
-    }
-    if (!is.na(millage_muni_2024)) {
-      result$millage_2024_municipality <- as.numeric(gsub("[^0-9.]", "", millage_muni_2024))
-    }
-    if (!is.na(millage_muni_2025)) {
-      result$millage_2025_municipality <- as.numeric(gsub("[^0-9.]", "", millage_muni_2025))
-    }
-
-    # Extract school district millage for all years using exact XPath
-    millage_school_2023 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[3]/td[2]")
-    millage_school_2024 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[3]/td[3]")
-    millage_school_2025 <- safe_extract(page, "//*[@id='no-more-tables']/table[2]/tbody/tr[3]/td[4]")
-
-    if (!is.na(millage_school_2023)) {
-      result$millage_2023_school <- as.numeric(gsub("[^0-9.]", "", millage_school_2023))
-    }
-    if (!is.na(millage_school_2024)) {
-      result$millage_2024_school <- as.numeric(gsub("[^0-9.]", "", millage_school_2024))
-    }
-    if (!is.na(millage_school_2025)) {
-      result$millage_2025_school <- as.numeric(gsub("[^0-9.]", "", millage_school_2025))
-    }
 
     # Extract contact information
     contact_name <- safe_extract(page, "//div[@class='migratebox']//li[1]")
@@ -331,8 +295,6 @@ test_scraper <- function(test_ids = c(1, 2, 3)) {
     cat("\nField extraction check:\n")
     cat("Municipality names:", paste(test_df$municipality, collapse = ", "), "\n")
     cat("School districts:", paste(test_df$school_district, collapse = ", "), "\n")
-    cat("2025 Municipality millage:", paste(test_df$millage_2025_municipality, collapse = ", "), "\n")
-    cat("2025 School millage:", paste(test_df$millage_2025_school, collapse = ", "), "\n")
 
     return(test_df)
   } else {
@@ -537,7 +499,7 @@ scrape_all_municipalities <- function() {
       school_district == "NORTH HILLS" ~ "28",
       school_district == "NORTHGATE" ~ "29",
       school_district == "PENN HILLS" ~ "30",
-      school_district == "PENN-TRAFFORD º" ~ NA_character_,
+      school_district == "PENN-TRAFFORD º" ~ "49",
       school_district == "PINE-RICHLAND" ~ "3",
       school_district == "PITTSBURGH" ~ "47",
       school_district == "PLUM" ~ "31",
