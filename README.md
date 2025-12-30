@@ -49,15 +49,15 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 
 ## Data Codebook
 
-### muni-profiles.csv
+#### `muni-profiles.csv`
 
 The main scraped data file includes the following columns:
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| `municipality` | Character | Full name of the municipality (e.g., "City of Pittsburgh", "Borough of Aspinwall") |
-| `muni_code` | Character | Municipality code used by Allegheny County (e.g., "100", "801", "926") |
-| `school_code` | Character | School district code (e.g., "1", "47", "26") |
+| `municipality` | Character | Full name of the municipality |
+| `muni_code` | Character | Municipality code used by Allegheny County  |
+| `school_code` | Character | School district code |
 | `county_council_district` | Character | Allegheny County Council district number |
 | `council_representative` | Character | Name of the Allegheny County Council representative |
 | `senatorial_district` | Character | Pennsylvania State Senate district |
@@ -79,7 +79,7 @@ The main scraped data file includes the following columns:
 | `certified_purta_value` | Numeric | Public Utility Realty Tax Act value |
 | `certified_all_real_estate` | Numeric | Total real estate value (sum of above categories) |
 
-### muni-millage-rates-long.csv
+#### `muni-millage-rates.csv`
 
 Long-format municipal millage rates file for joining with assessment appeals data. Each row represents a municipality-year combination.
 
@@ -90,7 +90,7 @@ Long-format municipal millage rates file for joining with assessment appeals dat
 | `tax_year` | Integer | Tax year (2018-2025) |
 | `millage` | Numeric | Municipal tax rate for that year (in mills) |
 
-### school-millage-rates-long.csv
+#### `school-millage-rates.csv`
 
 Long-format school district millage rates file for joining with assessment appeals data. Each row represents a school district-year combination.
 
@@ -103,7 +103,7 @@ Long-format school district millage rates file for joining with assessment appea
 
 **Note:** The school district file uses `distinct()` to remove duplicate rows since multiple municipalities can be in the same school district.
 
-### `county-millage-rates-long.csv`
+#### `county-millage-rates.csv`
 
 Long-format county millage rates file for joining with assessment appeals data. Each row represents a tax year.
 
