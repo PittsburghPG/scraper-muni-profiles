@@ -39,9 +39,9 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 - County millage rates
 
 **Output:** Three long-format CSV files ready for joining with assessment data:
-  - `data/muni-millage-rates-long.csv` - Municipal millage rates
-  - `data/school-millage-rates-long.csv` - School district millage rates
-  - `data/county-millage-rates-long.csv` - County millage rates
+  - `data/muni-millage-rates.csv` - Municipal millage rates
+  - `data/school-millage-rates.csv` - School district millage rates
+  - `data/county-millage-rates.csv` - County millage rates
 
 **Time:** ~1 minute (1-second delay between requests)
 
@@ -55,29 +55,29 @@ The main scraped data file includes the following columns:
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| municipality | Character | Full name of the municipality (e.g., "City of Pittsburgh", "Borough of Aspinwall") |
-| muni_code | Character | Municipality code used by Allegheny County (e.g., "100", "801", "926") |
-| school_code | Character | School district code (e.g., "1", "47", "26") |
-| county_council_district | Character | Allegheny County Council district number |
-| council_representative | Character | Name of the Allegheny County Council representative |
-| senatorial_district | Character | Pennsylvania State Senate district |
-| legislative_district | Character | Pennsylvania State House of Representatives district |
-| congressional_district | Character | U.S. Congressional district |
-| square_miles | Numeric | Geographic area of the municipality in square miles |
-| school_district | Character | Name of the school district (uppercase, cleaned) |
-| council_of_government | Character | Council of Governments (COG) membership |
-| police_chief | Character | Police chief name or police department information |
-| fire_chief | Character | Fire chief name |
-| ems_agency | Character | Emergency medical services provider |
-| sanitary_authority | Character | Name of the sanitary authority |
-| contact_name | Character | Name of the primary municipal contact person |
-| contact_address | Character | Municipal office address |
-| contact_phone | Character | Municipal office phone number |
-| median_property_value | Numeric | Median property value in dollars |
-| certified_taxable_value | Numeric | Certified taxable property value |
-| certified_exempt_value | Numeric | Certified tax-exempt property value |
-| certified_purta_value | Numeric | Public Utility Realty Tax Act value |
-| certified_all_real_estate | Numeric | Total real estate value (sum of above categories) |
+| `municipality` | Character | Full name of the municipality (e.g., "City of Pittsburgh", "Borough of Aspinwall") |
+| `muni_code` | Character | Municipality code used by Allegheny County (e.g., "100", "801", "926") |
+| `school_code` | Character | School district code (e.g., "1", "47", "26") |
+| `county_council_district` | Character | Allegheny County Council district number |
+| `council_representative` | Character | Name of the Allegheny County Council representative |
+| `senatorial_district` | Character | Pennsylvania State Senate district |
+| `legislative_district` | Character | Pennsylvania State House of Representatives district |
+| `congressional_district` | Character | U.S. Congressional district |
+| `square_miles` | Numeric | Geographic area of the municipality in square miles |
+| `school_district` | Character | Name of the school district (uppercase, cleaned) |
+| `council_of_government` | Character | Council of Governments (COG) membership |
+| `police_chief` | Character | Police chief name or police department information |
+| `fire_chief` | Character | Fire chief name |
+| `ems_agency` | Character | Emergency medical services provider |
+| `sanitary_authority` | Character | Name of the sanitary authority |
+| `contact_name` | Character | Name of the primary municipal contact person |
+| `contact_address` | Character | Municipal office address |
+| `contact_phone` | Character | Municipal office phone number |
+| `median_property_value` | Numeric | Median property value in dollars |
+| `certified_taxable_value` | Numeric | Certified taxable property value |
+| `certified_exempt_value` | Numeric | Certified tax-exempt property value |
+| `certified_purta_value` | Numeric | Public Utility Realty Tax Act value |
+| `certified_all_real_estate` | Numeric | Total real estate value (sum of above categories) |
 
 ### muni-millage-rates-long.csv
 
@@ -85,10 +85,10 @@ Long-format municipal millage rates file for joining with assessment appeals dat
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| municipality | Character | Full name of the municipality |
-| muni_code | Character | Municipality code used by Allegheny County |
-| tax_year | Integer | Tax year (2018-2025) |
-| millage | Numeric | Municipal tax rate for that year (in mills) |
+| `municipality` | Character | Full name of the municipality |
+| `muni_code` | Character | Municipality code used by Allegheny County |
+| `tax_year` | Integer | Tax year (2018-2025) |
+| `millage` | Numeric | Municipal tax rate for that year (in mills) |
 
 ### school-millage-rates-long.csv
 
@@ -96,22 +96,22 @@ Long-format school district millage rates file for joining with assessment appea
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| school | Character | Name of the school district (uppercase, cleaned) |
-| school_code | Character | School district code |
-| tax_year | Integer | Tax year (2018-2025) |
-| millage | Numeric | School district tax rate for that year (in mills) |
+| `school` | Character | Name of the school district (uppercase, cleaned) |
+| `school_code` | Character | School district code |
+| `tax_year` | Integer | Tax year (2018-2025) |
+| `millage` | Numeric | School district tax rate for that year (in mills) |
 
 **Note:** The school district file uses `distinct()` to remove duplicate rows since multiple municipalities can be in the same school district.
 
-### county-millage-rates-long.csv
+### `county-millage-rates-long.csv`
 
 Long-format county millage rates file for joining with assessment appeals data. Each row represents a tax year.
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| county | Character | County name (always "Allegheny County") |
-| tax_year | Integer | Tax year (2018-2025) |
-| millage | Numeric | Allegheny County tax rate for that year (in mills) |
+| `county` | Character | County name (always "Allegheny County") |
+| `tax_year` | Integer | Tax year (2018-2025) |
+| `millage` | Numeric | Allegheny County tax rate for that year (in mills) |
 
 **Note:** Tax rates are expressed in mills (1 mill = $1 per $1,000 of assessed value). County millage rates are uniform across all municipalities in Allegheny County.
 
