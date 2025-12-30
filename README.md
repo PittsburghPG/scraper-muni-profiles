@@ -1,10 +1,6 @@
-# Municipal Profile Scraper
+# Municipal Profile and Millage Rate Scraper
 
-R scraper to pull municipality profiles in Allegheny County, Pa.: <https://apps.alleghenycounty.us/website/MuniList.asp>
-
-## Overview
-
-This scraper collects detailed information about all 130 municipalities in Allegheny County, Pennsylvania. The data includes demographic information, property values, tax rates, political districts, emergency services, and municipal contact information.
+R scrapers to pull municipality profiles and millage rates in Allegheny County, Pa.: <https://apps.alleghenycounty.us/website/MuniList.asp>
 
 ## Quick Start
 
@@ -27,7 +23,7 @@ This scraper collects detailed information about all 130 municipalities from the
 
 **Time:** ~2-3 minutes (1-second delay between requests)
 
-### 2. Scrape Historical Millage Rates
+### 2. Scrape Millage Rates
 
 ```r
 source("scrape-millage.R")
@@ -47,7 +43,7 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 
 **Data Preservation:** The millage scraper preserves historical data when re-run. If the Treasurer's Office removes older years from their website, those years will still be retained in your local CSV files. New data is merged with existing data using `distinct()` to avoid duplicates.
 
-## Data Codebook
+## Data Diciontary
 
 #### `muni-profiles.csv`
 
