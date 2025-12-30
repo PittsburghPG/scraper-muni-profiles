@@ -1,6 +1,6 @@
-# Municipal Profile and Millage Rate Scraper
+# Municipal Profile and Millage Rates Scraper
 
-R scrapers to pull municipality profiles and millage rates in Allegheny County, Pa.: <https://apps.alleghenycounty.us/website/MuniList.asp>
+R scrapers to pull municipality profiles and millage rates for Allegheny County, Pa.: <https://apps.alleghenycounty.us/website/MuniList.asp>
 
 ## Quick Start
 
