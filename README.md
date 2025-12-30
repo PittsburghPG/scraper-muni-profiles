@@ -30,7 +30,7 @@ source("scrape-millage.R")
 ```
 
 This scraper fetches tax millage rates for all available years (currently 2018-2025) from the Allegheny County Treasurer's Office:
-- Municipal and county millage rates from https://apps.alleghenycounty.us/website/MillMuni.asp
+- County and municipal millage rates from https://apps.alleghenycounty.us/website/MillMuni.asp
 - School district millage rates from https://apps.alleghenycounty.us/website/millsd.asp
 
 **Output:** Three long-format CSV files ready for joining with assessment data:
@@ -42,7 +42,7 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 
 **Data Preservation:** The millage scraper preserves historical data when re-run. If the Treasurer's Office removes older years from their website, those years will still be retained in the local CSV files. New data is merged with existing data using `distinct()` to avoid duplicates.
 
-## Data Diciontary
+## Data Dictionary
 
 #### `muni-profiles.csv`
 
@@ -103,5 +103,5 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 ## Data Sources
 
 - **Municipal Profiles:** <https://apps.alleghenycounty.us/website/MuniProfile.asp>
-- **Municipal Millage Rates:** <https://apps.alleghenycounty.us/website/MillMuni.asp>
+- **County and Municipal Millage Rates:** <https://apps.alleghenycounty.us/website/MillMuni.asp>
 - **School District Millage Rates:** <https://apps.alleghenycounty.us/website/millsd.asp>
