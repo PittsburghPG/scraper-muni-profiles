@@ -80,6 +80,7 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 | `muni_code` | Character | Municipality code used by Allegheny County |
 | `tax_year` | Integer | Tax year (2018-2025) |
 | `millage` | Numeric | Municipal tax rate for that year (in mills) |
+| `land_millage` | Numeric | Land millage rate (applicable for City of Clairton, City of McKeesport, and historically for City of Duquesne; NA for all others) |
 
 #### `school-millage-rates.csv`
 
@@ -89,6 +90,7 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 | `school_code` | Character | School district code |
 | `tax_year` | Integer | Tax year (2018-2025) |
 | `millage` | Numeric | School district tax rate for that year (in mills) |
+| `land_millage` | Numeric | Land millage rate (only applicable for Clairton School District; NA for all others) |
 
 #### `county-millage-rates.csv`
 

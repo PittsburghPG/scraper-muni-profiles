@@ -23,7 +23,7 @@ scrape_muni_millage <- function(year) {
   tryCatch({
     page <- read_html(url)
     table_rows <- html_nodes(page, "table tr")
-    data_rows <- table_rows[-1]  # Skip header
+    data_rows <- table_rows[-c(1, 2)]  # Skip first two rows (malformed header rows)
 
     millage_data <- map_df(data_rows, function(row) {
       cells <- html_nodes(row, "td")
@@ -34,10 +34,19 @@ scrape_muni_millage <- function(year) {
         millage_clean <- gsub("[^0-9.]", "", millage)
         millage_numeric <- ifelse(millage_clean == "", NA, as.numeric(millage_clean))
 
+        # Check for land millage (column 5) - only applicable to some municipalities
+        land_millage_numeric <- NA
+        if (length(cells) >= 5) {
+          land_millage <- html_text(cells[5], trim = TRUE)
+          land_millage_clean <- gsub("[^0-9.]", "", land_millage)
+          land_millage_numeric <- ifelse(land_millage_clean == "", NA, as.numeric(land_millage_clean))
+        }
+
         tibble(
           municipality = municipality,
           tax_year = year,
-          millage = millage_numeric
+          millage = millage_numeric,
+          land_millage = land_millage_numeric
         )
       } else {
         NULL
@@ -69,7 +78,7 @@ scrape_school_millage <- function(year) {
   tryCatch({
     page <- read_html(url)
     table_rows <- html_nodes(page, "table tr")
-    data_rows <- table_rows[-1]  # Skip header
+    data_rows <- table_rows[-c(1, 2)]  # Skip first two rows (malformed header rows)
 
     millage_data <- map_df(data_rows, function(row) {
       cells <- html_nodes(row, "td")
@@ -80,10 +89,19 @@ scrape_school_millage <- function(year) {
         millage_clean <- gsub("[^0-9.]", "", millage)
         millage_numeric <- ifelse(millage_clean == "", NA, as.numeric(millage_clean))
 
+        # Check for land millage (column 4) - only applicable to some school districts
+        land_millage_numeric <- NA
+        if (length(cells) >= 4) {
+          land_millage <- html_text(cells[4], trim = TRUE)
+          land_millage_clean <- gsub("[^0-9.]", "", land_millage)
+          land_millage_numeric <- ifelse(land_millage_clean == "", NA, as.numeric(land_millage_clean))
+        }
+
         tibble(
           school = school_district,
           tax_year = year,
-          millage = millage_numeric
+          millage = millage_numeric,
+          land_millage = land_millage_numeric
         )
       } else {
         NULL
@@ -203,7 +221,7 @@ scrape_all_millage <- function(years = 2018:2025) {
         municipality == "Liberty Borough" ~ "837",
         municipality == "Lincoln Borough" ~ "881",
         municipality == "Marshall Township" ~ "923",
-        municipality == "McCandless Town" ~ "927",
+        municipality == "McCandless Township" ~ "927",
         municipality == "McDonald Borough" ~ "841",
         municipality == "City of McKeesport" ~ "400",
         municipality == "McKees Rocks Borough" ~ "842",
@@ -270,7 +288,7 @@ scrape_all_millage <- function(years = 2018:2025) {
         municipality == "Wilmerding Borough" ~ "867"
       )
     ) |>
-    select(municipality, muni_code, tax_year, millage) |>
+    select(municipality, muni_code, tax_year, millage, land_millage) |>
     arrange(municipality, tax_year)
 
   # School district codes mapping
@@ -324,7 +342,7 @@ scrape_all_millage <- function(years = 2018:2025) {
         school == "WOODLAND HILLS" ~ "9"
       )
     ) |>
-    select(school, school_code, tax_year, millage) |>
+    select(school, school_code, tax_year, millage, land_millage) |>
     arrange(school, tax_year)
 
   # Save files - preserve historical data by merging with existing files
