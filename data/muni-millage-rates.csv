@@ -71,14 +71,14 @@ Ben Avon Heights Borough,805,2022,7.95
 Ben Avon Heights Borough,805,2023,7.95
 Ben Avon Heights Borough,805,2024,7.95
 Ben Avon Heights Borough,805,2025,7.95
-Bethel Park,NA,2018,2.53
-Bethel Park,NA,2019,2.78
-Bethel Park,NA,2020,2.78
-Bethel Park,NA,2021,2.78
-Bethel Park,NA,2022,2.78
-Bethel Park,NA,2023,2.78
-Bethel Park,NA,2024,3.53
-Bethel Park 3,NA,2025,3.53
+Bethel Park,876,2018,2.53
+Bethel Park,876,2019,2.78
+Bethel Park,876,2020,2.78
+Bethel Park,876,2021,2.78
+Bethel Park,876,2022,2.78
+Bethel Park,876,2023,2.78
+Bethel Park,876,2024,3.53
+Bethel Park,876,2025,3.53
 Blawnox Borough,806,2018,9.85
 Blawnox Borough,806,2019,9.85
 Blawnox Borough,806,2020,9.85
@@ -166,7 +166,7 @@ Cheswick Borough,815,2021,5.85
 Cheswick Borough,815,2022,5.85
 Cheswick Borough,815,2023,5.85
 Cheswick Borough,815,2024,5.85
-Cheswick Borough 5,NA,2025,5.85
+Cheswick Borough,815,2025,5.85
 Churchill Borough,816,2018,6.48
 Churchill Borough,816,2019,6.48
 Churchill Borough,816,2020,7.48
@@ -175,14 +175,14 @@ Churchill Borough,816,2022,8
 Churchill Borough,816,2023,8
 Churchill Borough,816,2024,8
 Churchill Borough,816,2025,9
-City of Clairton 1,NA,2018,3.5
-City of Clairton 1,NA,2019,3.5
-City of Clairton 1,NA,2020,33
-City of Clairton 1,NA,2021,33
-City of Clairton 1,NA,2022,33
-City of Clairton 1,NA,2023,33
-City of Clairton 1,NA,2024,35
-City of Clairton 1,NA,2025,35
+City of Clairton,200,2018,3.5
+City of Clairton,200,2019,3.5
+City of Clairton,200,2020,33
+City of Clairton,200,2021,33
+City of Clairton,200,2022,33
+City of Clairton,200,2023,33
+City of Clairton,200,2024,35
+City of Clairton,200,2025,35
 City of Duquesne,300,2018,13.5
 City of Duquesne,300,2019,13.5
 City of Duquesne,300,2020,20.5
@@ -191,14 +191,14 @@ City of Duquesne,300,2022,20.5
 City of Duquesne,300,2023,20
 City of Duquesne,300,2024,20
 City of Duquesne,300,2025,20
-City of McKeesport 1,NA,2018,6.26
-City of McKeesport 1,NA,2019,6.26
-City of McKeesport 1,NA,2020,20.5
-City of McKeesport 1,NA,2021,20.5
-City of McKeesport 1,NA,2022,20.5
-City of McKeesport 1,NA,2023,20.5
-City of McKeesport 1,NA,2024,20.5
-City of McKeesport 1,NA,2025,20.5
+City of McKeesport,400,2018,6.26
+City of McKeesport,400,2019,6.26
+City of McKeesport,400,2020,20.5
+City of McKeesport,400,2021,20.5
+City of McKeesport,400,2022,20.5
+City of McKeesport,400,2023,20.5
+City of McKeesport,400,2024,20.5
+City of McKeesport,400,2025,20.5
 City of Pittsburgh,100,2018,8.06
 City of Pittsburgh,100,2019,8.06
 City of Pittsburgh,100,2020,8.06
@@ -238,7 +238,7 @@ Crescent Township,906,2021,4.9
 Crescent Township,906,2022,4.9
 Crescent Township,906,2023,7.4
 Crescent Township,906,2024,7.4
-Crescent Township 3,NA,2025,8.4
+Crescent Township,906,2025,8.4
 Dormont Borough,819,2018,9.97
 Dormont Borough,819,2019,9.97
 Dormont Borough,819,2020,9.97
@@ -310,7 +310,7 @@ Elizabeth Township,908,2021,3.926
 Elizabeth Township,908,2022,3.926
 Elizabeth Township,908,2023,3.926
 Elizabeth Township,908,2024,3.926
-Elizabeth Township 3,NA,2025,4.026
+Elizabeth Township,908,2025,4.026
 Emsworth Borough,826,2018,3.93
 Emsworth Borough,826,2019,3.955
 Emsworth Borough,826,2020,4.955
@@ -462,7 +462,7 @@ Homestead Borough,834,2021,13.33
 Homestead Borough,834,2022,13.33
 Homestead Borough,834,2023,15.33
 Homestead Borough,834,2024,15.33
-Homestead Borough 5,NA,2025,15.33
+Homestead Borough,834,2025,15.33
 Indiana Township,917,2018,3.47
 Indiana Township,917,2019,3.47
 Indiana Township,917,2020,3.47
@@ -518,7 +518,7 @@ Leetsdale Borough,836,2021,10
 Leetsdale Borough,836,2022,9
 Leetsdale Borough,836,2023,9
 Leetsdale Borough,836,2024,9
-Leetsdale Borough 4,NA,2025,9
+Leetsdale Borough,836,2025,9
 Liberty Borough,837,2018,8
 Liberty Borough,837,2019,8
 Liberty Borough,837,2020,8
@@ -543,22 +543,14 @@ Marshall Township,923,2022,1.42
 Marshall Township,923,2023,1.42
 Marshall Township,923,2024,1.42
 Marshall Township,923,2025,1.42
-McCandless Township,NA,2018,1.236
-McCandless Township,NA,2019,1.236
-McCandless Township,NA,2020,1.236
-McCandless Township,NA,2021,1.236
-McCandless Township,NA,2022,1.236
-McCandless Township,NA,2023,1.236
-McCandless Township,NA,2024,1.236
-McCandless Township,NA,2025,1.236
-McDonald Borough 2,NA,2018,40.75
-McDonald Borough 2,NA,2019,33.9
-McDonald Borough 2,NA,2020,3.39
-McDonald Borough 2,NA,2021,3.39
-McDonald Borough 2,NA,2022,3.39
-McDonald Borough 2,NA,2023,3.39
-McDonald Borough 2,NA,2024,3.39
-McDonald Borough 2,NA,2025,3.39
+McDonald Borough,841,2018,40.75
+McDonald Borough,841,2019,33.9
+McDonald Borough,841,2020,3.39
+McDonald Borough,841,2021,3.39
+McDonald Borough,841,2022,3.39
+McDonald Borough,841,2023,3.39
+McDonald Borough,841,2024,3.39
+McDonald Borough,841,2025,3.39
 McKees Rocks Borough,842,2018,9.4
 McKees Rocks Borough,842,2019,9.4
 McKees Rocks Borough,842,2020,9.4
@@ -591,22 +583,22 @@ Moon Township,925,2022,2.74
 Moon Township,925,2023,2.74
 Moon Township,925,2024,2.74
 Moon Township,925,2025,2.74
-Mount Lebanon,NA,2018,4.71
-Mount Lebanon,NA,2019,4.71
-Mount Lebanon,NA,2020,4.71
-Mount Lebanon,NA,2021,4.71
-Mount Lebanon,NA,2022,4.91
-Mount Lebanon,NA,2023,4.91
-Mount Lebanon,NA,2024,4.5
-Mount Lebanon,NA,2025,4.5
-Mount Oliver Borough,NA,2018,13.5
-Mount Oliver Borough,NA,2019,13.5
-Mount Oliver Borough,NA,2020,13.5
-Mount Oliver Borough,NA,2021,13.5
-Mount Oliver Borough,NA,2022,13.5
-Mount Oliver Borough,NA,2023,13.5
-Mount Oliver Borough,NA,2024,15.5
-Mount Oliver Borough,NA,2025,16.5
+Mount Lebanon,926,2018,4.71
+Mount Lebanon,926,2019,4.71
+Mount Lebanon,926,2020,4.71
+Mount Lebanon,926,2021,4.71
+Mount Lebanon,926,2022,4.91
+Mount Lebanon,926,2023,4.91
+Mount Lebanon,926,2024,4.5
+Mount Lebanon,926,2025,4.5
+Mount Oliver Borough,839,2018,13.5
+Mount Oliver Borough,839,2019,13.5
+Mount Oliver Borough,839,2020,13.5
+Mount Oliver Borough,839,2021,13.5
+Mount Oliver Borough,839,2022,13.5
+Mount Oliver Borough,839,2023,13.5
+Mount Oliver Borough,839,2024,15.5
+Mount Oliver Borough,839,2025,16.5
 Munhall Borough,840,2018,10.75
 Munhall Borough,840,2019,10.75
 Munhall Borough,840,2020,10.75
@@ -679,14 +671,14 @@ Ohio Township,932,2022,3.09
 Ohio Township,932,2023,3.09
 Ohio Township,932,2024,3.09
 Ohio Township,932,2025,3.69
-Penn Hills Township,NA,2018,5.444
-Penn Hills Township,NA,2019,6.444
-Penn Hills Township,NA,2020,6.444
-Penn Hills Township,NA,2021,6.444
-Penn Hills Township,NA,2022,6.444
-Penn Hills Township,NA,2023,6.444
-Penn Hills Township,NA,2024,6.444
-Penn Hills Township,NA,2025,6.944
+Penn Hills Township,934,2018,5.444
+Penn Hills Township,934,2019,6.444
+Penn Hills Township,934,2020,6.444
+Penn Hills Township,934,2021,6.444
+Penn Hills Township,934,2022,6.444
+Penn Hills Township,934,2023,6.444
+Penn Hills Township,934,2024,6.444
+Penn Hills Township,934,2025,6.944
 Pennsbury Village,871,2018,4.8
 Pennsbury Village,871,2019,4.8
 Pennsbury Village,871,2020,5.7
@@ -830,7 +822,7 @@ Sharpsburg Borough,852,2021,7.5
 Sharpsburg Borough,852,2022,8.25
 Sharpsburg Borough,852,2023,9.75
 Sharpsburg Borough,852,2024,9.75
-Sharpsburg Borough 3,NA,2025,9.75
+Sharpsburg Borough,852,2025,9.75
 South Fayette Township,946,2018,4.73
 South Fayette Township,946,2019,4.73
 South Fayette Township,946,2020,4.73
@@ -903,14 +895,14 @@ Thornburg Borough,856,2022,6.6
 Thornburg Borough,856,2023,6.6
 Thornburg Borough,856,2024,6.6
 Thornburg Borough,856,2025,6.6
-Trafford Borough 2,NA,2018,31.5
-Trafford Borough 2,NA,2019,31.5
-Trafford Borough 2,NA,2020,31.5
-Trafford Borough 2,NA,2021,31.5
-Trafford Borough 2,NA,2022,31.5
-Trafford Borough 2,NA,2023,31.5
-Trafford Borough 2,NA,2024,31.5
-Trafford Borough 2,NA,2025,31.5
+Trafford Borough,857,2018,31.5
+Trafford Borough,857,2019,31.5
+Trafford Borough,857,2020,31.5
+Trafford Borough,857,2021,31.5
+Trafford Borough,857,2022,31.5
+Trafford Borough,857,2023,31.5
+Trafford Borough,857,2024,31.5
+Trafford Borough,857,2025,31.5
 Turtle Creek Borough,858,2018,9.5
 Turtle Creek Borough,858,2019,9.5
 Turtle Creek Borough,858,2020,9.5

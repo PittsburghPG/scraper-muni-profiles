@@ -123,7 +123,9 @@ scrape_all_millage <- function(years = 2018:2025) {
     select(county, tax_year, millage)
 
   muni_data <- muni_data |>
-    filter(municipality != "Allegheny County")
+    filter(municipality != "Allegheny County") |>
+    # Clean up municipality names - remove footnote numbers
+    mutate(municipality = gsub("\\s+\\d+$", "", municipality))
 
   # Scrape school district millage
   cat("\nSTEP 2: Scraping school district millage rates...\n")
@@ -145,7 +147,7 @@ scrape_all_millage <- function(years = 2018:2025) {
         municipality == "Bellevue Borough" ~ "803",
         municipality == "Ben Avon Borough" ~ "804",
         municipality == "Ben Avon Heights Borough" ~ "805",
-        municipality == "Bethel Park Municipality" ~ "876",
+        municipality == "Bethel Park" ~ "876",
         municipality == "Blawnox Borough" ~ "806",
         municipality == "Brackenridge Borough" ~ "807",
         municipality == "Braddock Borough" ~ "808",
@@ -208,8 +210,8 @@ scrape_all_millage <- function(years = 2018:2025) {
         municipality == "Millvale Borough" ~ "838",
         municipality == "Monroeville Municipality" ~ "879",
         municipality == "Moon Township" ~ "925",
-        municipality == "Mt. Lebanon Municipality" ~ "926",
-        municipality == "Mt. Oliver Borough" ~ "839",
+        municipality == "Mount Lebanon" ~ "926",
+        municipality == "Mount Oliver Borough" ~ "839",
         municipality == "Munhall Borough" ~ "840",
         municipality == "Neville Township" ~ "928",
         municipality == "North Braddock Borough" ~ "843",
@@ -220,7 +222,7 @@ scrape_all_millage <- function(years = 2018:2025) {
         municipality == "O'Hara Township" ~ "931",
         municipality == "Ohio Township" ~ "932",
         municipality == "Glen Osborne Borough" ~ "846",
-        municipality == "Penn Hills Municipality" ~ "934",
+        municipality == "Penn Hills Township" ~ "934",
         municipality == "Pennsbury Village" ~ "871",
         municipality == "Pine Township" ~ "935",
         municipality == "Pitcairn Borough" ~ "847",
@@ -336,8 +338,14 @@ scrape_all_millage <- function(years = 2018:2025) {
   # Municipal millage - preserve existing data
   if (file.exists(muni_file)) {
     existing_muni <- read_csv(muni_file, show_col_types = FALSE) |>
-      mutate(muni_code = as.character(muni_code))  # Ensure character type
+      mutate(
+        muni_code = as.character(muni_code),
+        # Clean footnotes from existing data too
+        municipality = gsub("\\s+\\d+$", "", municipality)
+      )
     muni_data <- bind_rows(existing_muni, muni_data) |>
+      # Remove rows with NA muni_code (these are the old footnoted entries)
+      filter(!is.na(muni_code)) |>
       distinct(municipality, muni_code, tax_year, .keep_all = TRUE) |>
       arrange(municipality, tax_year)
     cat("  Merged with existing municipal data\n")
@@ -348,6 +356,8 @@ scrape_all_millage <- function(years = 2018:2025) {
     existing_school <- read_csv(school_file, show_col_types = FALSE) |>
       mutate(school_code = as.character(school_code))  # Ensure character type
     school_data <- bind_rows(existing_school, school_data) |>
+      # Remove rows with NA school_code (these are old entries before Penn-Trafford was assigned a code)
+      filter(!is.na(school_code)) |>
       distinct(school, school_code, tax_year, .keep_all = TRUE) |>
       arrange(school, tax_year)
     cat("  Merged with existing school data\n")
@@ -372,9 +382,9 @@ scrape_all_millage <- function(years = 2018:2025) {
 
   cat("\n=== SCRAPING COMPLETE ===\n")
   cat("Output files:\n")
-  cat("  - data/muni-millage-rates-long.csv\n")
-  cat("  - data/school-millage-rates-long.csv\n")
-  cat("  - data/county-millage-rates-long.csv\n")
+  cat("  - data/muni-millage-rates.csv\n")
+  cat("  - data/school-millage-rates.csv\n")
+  cat("  - data/county-millage-rates.csv\n")
   cat("\nYears included:\n")
   cat("  - Municipal:", paste(sort(unique(muni_data$tax_year)), collapse = ", "), "\n")
   cat("  - School:", paste(sort(unique(school_data$tax_year)), collapse = ", "), "\n")

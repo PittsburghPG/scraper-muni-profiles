@@ -73,15 +73,17 @@ scrape_municipality <- function(muni_id) {
     # Read the page
     page <- read_html(url)
 
-    # Set municipality name from our mapping
+    # Set municipality name from our mapping and remove any footnotes
     if (muni_id <= length(municipality_names)) {
-      result$municipality <- municipality_names[muni_id]
+      # Remove trailing footnote numbers (e.g., " 3", " 5", " 1")
+      result$municipality <- gsub("\\s+\\d+$", "", municipality_names[muni_id])
     }
 
-    # Extract school district using XPath
+    # Extract school district using XPath and remove footnotes
     school_district <- safe_extract(page, "//td[contains(., 'School District:')]/following-sibling::td[1]")
     if (!is.na(school_district)) {
-      result$school_district <- trimws(school_district)
+      # Remove special characters like º and trailing footnote numbers
+      result$school_district <- gsub("[º\u0095]|\\s+\\d+$", "", trimws(school_district))
     }
 
     # Extract certified values using exact XPath selectors
