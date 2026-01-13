@@ -4,7 +4,7 @@ R scrapers to pull municipality profiles and millage rates from the Allegheny Co
 
 ## Quick Start
 
-This repository currently contains two main scrapers:
+This repository currently contains three main scrapers:
 
 ### 1. Scrape Municipal Profiles
 
@@ -42,7 +42,41 @@ This scraper fetches tax millage rates for all available years (currently 2018-2
 
 **Data Preservation:** The millage scraper preserves historical data when re-run. If the Treasurer's Office removes older years from their website, those years will still be retained in the local CSV files. New data is merged with existing data using `distinct()` to avoid duplicates.
 
+### 3. Scrape Real Estate Values Time Series
+
+```r
+source("scrape-real-estate-values.R")
+```
+
+This scraper tracks real estate values over time by extracting the "Value As Of" row from each municipality's profile page:
+- Captures the "Value As Of" date and formats it as ISO date (e.g., "2026-01-08")
+- Records taxable, exempt, PURTA, and total real estate values
+- Appends new data to historical dataset (avoiding duplicates)
+- Runs automatically every Friday evening via GitHub Actions
+
+**Output:** `data/muni-real-estate-time-series.csv` (growing time series)
+
+**Time:** ~2-3 minutes (1-second delay between requests)
+
+**Data Preservation:** The scraper checks if data for a specific "Value As Of" date already exists before appending. This prevents duplicates and allows the dataset to grow over time as values change weekly.
+
+**Automation:** A GitHub Actions workflow runs this scraper every Friday at 8:00 PM EST and commits any changes automatically.
+
 ## Data Dictionary
+
+#### `muni-real-estate-time-series.csv`
+
+| Column Name | Type | Description |
+|-------------|------|-------------|
+| `municipality` | Character | Full name of the municipality |
+| `value_as_of_date` | Date | "Value As Of" date in ISO format (e.g., "2026-01-08") |
+| `scraped_at` | Timestamp | When the data was scraped |
+| `taxable_value` | Numeric | Taxable property value |
+| `exempt_value` | Numeric | Tax-exempt property value |
+| `purta_value` | Numeric | Public Utility Realty Tax Act value |
+| `all_real_estate` | Numeric | Total real estate value (sum of above categories) |
+
+**Note:** This is a time series dataset. Each municipality will have multiple rows, one for each week when the "Value As Of" date changes.
 
 #### `muni-profiles.csv`
 
