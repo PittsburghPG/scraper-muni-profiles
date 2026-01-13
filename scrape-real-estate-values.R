@@ -99,15 +99,31 @@ scrape_real_estate_values <- function(muni_id, value_as_of_date = NULL) {
     all_real_estate <- as.numeric(gsub("[^0-9.]", "",
       safe_extract(page, "//*[@id='no-more-tables']/table[1]/tbody/tr[2]/td[5]", "0")))
 
+    # Extract median residential value
+    median_text <- safe_extract(page, "//*[contains(text(), 'Taxable Residential Median Value')]")
+    median_value <- NA
+    if (!is.na(median_text)) {
+      # Extract dollar amount from text like "Taxable Residential Median Value as of 1/8/2026: $137,800"
+      median_match <- str_extract(median_text, "\\$[0-9,]+")
+      if (!is.na(median_match)) {
+        median_value <- as.numeric(gsub("[^0-9]", "", median_match))
+      }
+    }
+
+    # Get muni_code based on municipality name
+    muni_code <- get_muni_code(municipality_name)
+
     # Return result with scrape metadata
     return(list(
       municipality = municipality_name,
+      muni_code = muni_code,
       value_as_of_date = value_as_of_date,
       scraped_at = Sys.time(),
       taxable_value = taxable_value,
       exempt_value = exempt_value,
       purta_value = purta_value,
-      all_real_estate = all_real_estate
+      all_real_estate = all_real_estate,
+      median_residential_value = median_value
     ))
 
   }, error = function(e) {
@@ -163,6 +179,149 @@ municipality_names <- c(
   "Borough of Whitehall", "Wilkins Township", "Borough of Wilkinsburg",
   "Borough of Wilmerding"
 )
+
+#' Get municipality code based on municipality name
+#' @param municipality_name Name of the municipality
+#' @return Municipality code or NA
+get_muni_code <- function(municipality_name) {
+  if (is.na(municipality_name)) return(NA)
+
+  code <- case_when(
+    municipality_name == "Aleppo Township" ~ "901",
+    municipality_name == "Borough of Aspinwall" ~ "801",
+    municipality_name == "Borough of Avalon" ~ "802",
+    municipality_name == "Borough of Baldwin" ~ "877",
+    municipality_name == "Baldwin Township" ~ "902",
+    municipality_name == "Borough of Bell Acres" ~ "883",
+    municipality_name == "Borough of Bellevue" ~ "803",
+    municipality_name == "Borough of Ben Avon" ~ "804",
+    municipality_name == "Borough of Ben Avon Hts." ~ "805",
+    municipality_name == "Municipality of Bethel Park" ~ "876",
+    municipality_name == "Borough of Blawnox" ~ "806",
+    municipality_name == "Borough of Brackenridge" ~ "807",
+    municipality_name == "Borough of Braddock" ~ "808",
+    municipality_name == "Borough of Braddock Hills" ~ "872",
+    municipality_name == "Borough of Bradford Woods" ~ "809",
+    municipality_name == "Borough of Brentwood" ~ "810",
+    municipality_name == "Borough of Bridgeville" ~ "811",
+    municipality_name == "Borough of Carnegie" ~ "812",
+    municipality_name == "Borough of Castle Shannon" ~ "813",
+    municipality_name == "Borough of Chalfant" ~ "814",
+    municipality_name == "Borough of Cheswick" ~ "815",
+    municipality_name == "Borough of Churchill" ~ "816",
+    municipality_name == "City of Clairton" ~ "200",
+    municipality_name == "Collier Township" ~ "905",
+    municipality_name == "Borough of Coraopolis" ~ "817",
+    municipality_name == "Borough of Crafton" ~ "818",
+    municipality_name == "Crescent Township" ~ "906",
+    municipality_name == "Borough of Dormont" ~ "819",
+    municipality_name == "Borough of Dravosburg" ~ "820",
+    municipality_name == "City of Duquesne" ~ "300",
+    municipality_name == "East Deer Township" ~ "907",
+    municipality_name == "Borough of East McKeesport" ~ "821",
+    municipality_name == "Borough of East Pittsburgh" ~ "822",
+    municipality_name == "Borough of Edgewood" ~ "823",
+    municipality_name == "Borough of Edgeworth" ~ "824",
+    municipality_name == "Borough of Elizabeth" ~ "825",
+    municipality_name == "Elizabeth Township" ~ "908",
+    municipality_name == "Borough of Emsworth" ~ "826",
+    municipality_name == "Borough of Etna" ~ "827",
+    municipality_name == "Fawn Township" ~ "909",
+    municipality_name == "Findlay Township" ~ "910",
+    municipality_name == "Borough of Forest Hills" ~ "828",
+    municipality_name == "Forward Township" ~ "911",
+    municipality_name == "Borough of Fox Chapel" ~ "868",
+    municipality_name == "Borough of Franklin Park" ~ "884",
+    municipality_name == "Frazer Township" ~ "913",
+    municipality_name == "Borough of Glassport" ~ "829",
+    municipality_name == "Borough of Glenfield" ~ "830",
+    municipality_name == "Borough of Green Tree" ~ "831",
+    municipality_name == "Hampton Township" ~ "914",
+    municipality_name == "Harmar Township" ~ "915",
+    municipality_name == "Harrison Township" ~ "916",
+    municipality_name == "Borough of Haysville" ~ "832",
+    municipality_name == "Borough of Heidelberg" ~ "833",
+    municipality_name == "Borough of Homestead" ~ "834",
+    municipality_name == "Indiana Township" ~ "917",
+    municipality_name == "Borough of Ingram" ~ "835",
+    municipality_name == "Borough of Jefferson Hills" ~ "878",
+    municipality_name == "Kennedy Township" ~ "919",
+    municipality_name == "Kilbuck Township" ~ "920",
+    municipality_name == "Leet Township" ~ "921",
+    municipality_name == "Borough of Leetsdale" ~ "836",
+    municipality_name == "Borough of Liberty" ~ "837",
+    municipality_name == "Borough of Lincoln" ~ "881",
+    municipality_name == "Marshall Township" ~ "923",
+    municipality_name == "Town of McCandless" ~ "927",
+    municipality_name == "Borough of McDonald" ~ "841",
+    municipality_name == "City of McKeesport" ~ "400",
+    municipality_name == "Borough of McKees Rocks" ~ "842",
+    municipality_name == "Borough of Millvale" ~ "838",
+    municipality_name == "Municipality of Monroeville" ~ "879",
+    municipality_name == "Moon Township" ~ "925",
+    municipality_name == "Municipality of Mt. Lebanon" ~ "926",
+    municipality_name == "Borough of Mt. Oliver" ~ "839",
+    municipality_name == "Borough of Munhall" ~ "840",
+    municipality_name == "Neville Township" ~ "928",
+    municipality_name == "North Braddock Borough" ~ "843",
+    municipality_name == "North Fayette Township" ~ "929",
+    municipality_name == "North Versailles Township" ~ "930",
+    municipality_name == "Borough of Oakdale" ~ "844",
+    municipality_name == "Borough of Oakmont" ~ "845",
+    municipality_name == "O'Hara Township" ~ "931",
+    municipality_name == "Ohio Township" ~ "932",
+    municipality_name == "Borough of Glen Osborne" ~ "846",
+    municipality_name == "Municipality of Penn Hills" ~ "934",
+    municipality_name == "Pennsbury Village" ~ "871",
+    municipality_name == "Pine Township" ~ "935",
+    municipality_name == "Borough of Pitcairn" ~ "847",
+    municipality_name == "City of Pittsburgh" ~ "100",
+    municipality_name == "Borough of Pleasant Hills" ~ "873",
+    municipality_name == "Borough of Plum" ~ "880",
+    municipality_name == "Borough of Port Vue" ~ "848",
+    municipality_name == "Borough of Rankin" ~ "849",
+    municipality_name == "Reserve Township" ~ "937",
+    municipality_name == "Richland Township" ~ "938",
+    municipality_name == "Robinson Township" ~ "939",
+    municipality_name == "Ross Township" ~ "940",
+    municipality_name == "Borough of Rosslyn Farms" ~ "850",
+    municipality_name == "Scott Township" ~ "941",
+    municipality_name == "Borough of Sewickley" ~ "851",
+    municipality_name == "Borough of Sewickley Hts." ~ "869",
+    municipality_name == "Borough of Sewickley Hills" ~ "882",
+    municipality_name == "Shaler Township" ~ "944",
+    municipality_name == "Borough of Sharpsburg" ~ "852",
+    municipality_name == "South Fayette Township" ~ "946",
+    municipality_name == "South Park Township" ~ "945",
+    municipality_name == "South Versailles Township" ~ "947",
+    municipality_name == "Borough of Springdale" ~ "853",
+    municipality_name == "Springdale Township" ~ "948",
+    municipality_name == "Stowe Township" ~ "949",
+    municipality_name == "Borough of Swissvale" ~ "854",
+    municipality_name == "Borough of Tarentum" ~ "855",
+    municipality_name == "Borough of Thornburg" ~ "856",
+    municipality_name == "Borough of Trafford" ~ "857",
+    municipality_name == "Borough of Turtle Creek" ~ "858",
+    municipality_name == "Upper St. Clair Township" ~ "950",
+    municipality_name == "Borough of Verona" ~ "859",
+    municipality_name == "Borough of Versailles" ~ "860",
+    municipality_name == "Borough of Wall" ~ "861",
+    municipality_name == "West Deer Township" ~ "952",
+    municipality_name == "Borough of West Elizabeth" ~ "862",
+    municipality_name == "Borough of West Homestead" ~ "863",
+    municipality_name == "Borough of West Mifflin" ~ "870",
+    municipality_name == "Borough of West View" ~ "864",
+    municipality_name == "Borough of Whitaker" ~ "865",
+    municipality_name == "Borough of White Oak" ~ "875",
+    municipality_name == "Borough of Whitehall" ~ "874",
+    municipality_name == "Wilkins Township" ~ "953",
+    municipality_name == "Borough of Wilkinsburg" ~ "866",
+    municipality_name == "Borough of Wilmerding" ~ "867",
+    TRUE ~ NA_character_
+  )
+
+  return(code)
+}
 
 #' Scrape real estate values for all municipalities
 #' @return Data frame containing real estate values for all municipalities

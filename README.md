@@ -69,12 +69,14 @@ This scraper tracks real estate values over time by extracting the "Value As Of"
 | Column Name | Type | Description |
 |-------------|------|-------------|
 | `municipality` | Character | Full name of the municipality |
+| `muni_code` | Character | Municipality code used by Allegheny County (for joining with millage rates) |
 | `value_as_of_date` | Date | "Value As Of" date in ISO format (e.g., "2026-01-08") |
 | `scraped_at` | Timestamp | When the data was scraped |
 | `taxable_value` | Numeric | Taxable property value |
 | `exempt_value` | Numeric | Tax-exempt property value |
 | `purta_value` | Numeric | Public Utility Realty Tax Act value |
 | `all_real_estate` | Numeric | Total real estate value (sum of above categories) |
+| `median_residential_value` | Numeric | Median value of taxable residential properties |
 
 **Note:** This is a time series dataset. Each municipality will have multiple rows, one for each week when the "Value As Of" date changes.
 
