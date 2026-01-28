@@ -364,8 +364,54 @@ scrape_all_real_estate_values <- function() {
   return(df)
 }
 
+#' Get the Friday date for a given date (for weekly grouping)
+#' Vectorized function that works with single dates or vectors
+#' @param date A date object or vector of dates
+#' @return The Friday of the week containing each date
+get_week_friday <- function(date) {
+  # wday: 1=Sunday, 2=Monday, ..., 6=Friday, 7=Saturday
+  # For each date, find the Friday of that week
+  # If the date is Saturday (7) or Sunday (1), use the previous Friday
+  weekday <- wday(date)
+  days_to_friday <- case_when(
+    weekday == 1 ~ -2,  # Sunday -> previous Friday
+    weekday == 7 ~ -1,  # Saturday -> previous Friday
+    TRUE ~ 6 - weekday  # Mon-Fri -> this week's Friday
+  )
+  return(as.Date(date) + days_to_friday)
+}
+
+#' Calculate week-over-week and year-to-date changes for the time series
+#' @param data Data frame with time series data
+#' @return Data frame with change columns added
+calculate_changes <- function(data) {
+  data %>%
+    arrange(municipality, scrape_week) %>%
+    group_by(municipality) %>%
+    mutate(
+      # Week-over-week change in taxable value
+      taxable_value_wow_change = taxable_value - lag(taxable_value),
+      taxable_value_wow_pct = round((taxable_value - lag(taxable_value)) / lag(taxable_value) * 100, 4),
+
+      # Year-to-date cumulative change (from first observation of the year)
+      year = year(scrape_week),
+      first_value_of_year = first(taxable_value[year == year(scrape_week)]),
+      taxable_value_ytd_change = taxable_value - first_value_of_year,
+      taxable_value_ytd_pct = round((taxable_value - first_value_of_year) / first_value_of_year * 100, 4)
+    ) %>%
+    ungroup() %>%
+    # Clean up: remove helper column, replace NaN/Inf with NA
+    select(-first_value_of_year) %>%
+    mutate(
+      across(c(taxable_value_wow_change, taxable_value_wow_pct,
+               taxable_value_ytd_change, taxable_value_ytd_pct),
+             ~ifelse(is.nan(.) | is.infinite(.), NA, .))
+    )
+}
+
 #' Update the real estate values time series file
 #' This function scrapes current values and appends them to the historical dataset
+#' Weekly snapshots are always recorded for consistent time series tracking
 #' @param output_file Path to the output CSV file
 #' @return Data frame with updated time series
 update_real_estate_time_series <- function(output_file = here("data", "muni-real-estate-time-series.csv")) {
@@ -375,38 +421,70 @@ update_real_estate_time_series <- function(output_file = here("data", "muni-real
   # Scrape current values
   new_data <- scrape_all_real_estate_values()
 
+  # Convert scraped_at to character for consistent type handling
+  new_data$scraped_at <- as.character(new_data$scraped_at)
+
+  # Add scrape_week column (the Friday of the current week)
+  current_date <- as.Date(Sys.time())
+  scrape_week <- get_week_friday(current_date)
+  new_data$scrape_week <- scrape_week
+  cat("Scrape week (Friday):", as.character(scrape_week), "\n")
+
   # Check if historical file exists
   if (file.exists(output_file)) {
     cat("\nReading existing historical data...\n")
     historical_data <- read_csv(output_file, show_col_types = FALSE)
 
-    # Check if this value_as_of_date already exists in the data
-    if (nrow(new_data) > 0 && !is.na(new_data$value_as_of_date[1])) {
-      existing_date <- new_data$value_as_of_date[1]
-      if (existing_date %in% historical_data$value_as_of_date) {
-        cat("Data for 'Value As Of' date", existing_date, "already exists in historical file.\n")
-        cat("Skipping append to avoid duplicates.\n")
-        return(historical_data)
-      }
+    # Ensure column types match the new data for bind_rows compatibility
+    if ("muni_code" %in% names(historical_data)) {
+      historical_data$muni_code <- as.character(historical_data$muni_code)
+    }
+    if ("value_as_of_date" %in% names(historical_data)) {
+      historical_data$value_as_of_date <- as.character(historical_data$value_as_of_date)
+    }
+    if ("scraped_at" %in% names(historical_data)) {
+      historical_data$scraped_at <- as.character(historical_data$scraped_at)
+    }
+
+    # Ensure scrape_week column exists in historical data
+    if (!"scrape_week" %in% names(historical_data)) {
+      cat("Adding scrape_week column to historical data...\n")
+      # For legacy data, use the scraped_at date to determine the week
+      historical_data <- historical_data %>%
+        mutate(scrape_week = as.Date(get_week_friday(as.Date(scraped_at))))
+    }
+
+    # Check if we already have data for this week
+    if (scrape_week %in% as.Date(historical_data$scrape_week)) {
+      cat("Data for week of", as.character(scrape_week), "already exists.\n")
+      cat("Replacing with fresh data for this week...\n")
+      # Remove existing data for this week
+      historical_data <- historical_data %>%
+        filter(as.Date(scrape_week) != !!scrape_week)
     }
 
     # Append new data to historical data
     combined_data <- bind_rows(historical_data, new_data)
-    cat("Appended", nrow(new_data), "new records to", nrow(historical_data), "historical records.\n")
+    cat("Added", nrow(new_data), "new records.\n")
+    cat("Total historical records:", nrow(historical_data), "\n")
   } else {
     cat("\nNo historical file found. Creating new file...\n")
     combined_data <- new_data
   }
 
-  # Remove any duplicates based on municipality and value_as_of_date
+  # Sort by municipality and week
   combined_data <- combined_data %>%
-    distinct(municipality, value_as_of_date, .keep_all = TRUE) %>%
-    arrange(municipality, value_as_of_date)
+    arrange(municipality, scrape_week)
+
+  # Calculate week-over-week and YTD changes
+  cat("Calculating week-over-week and year-to-date changes...\n")
+  combined_data <- calculate_changes(combined_data)
 
   # Write to file
   write_csv(combined_data, output_file)
   cat("\nData written to:", output_file, "\n")
   cat("Total records in file:", nrow(combined_data), "\n")
+  cat("Unique weeks in file:", n_distinct(combined_data$scrape_week), "\n")
   cat("Scrape completed at:", as.character(Sys.time()), "\n")
 
   return(combined_data)
